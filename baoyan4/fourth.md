@@ -170,6 +170,76 @@ ECMAScript 6 中可以简单地使用块和 let 申明(或 const 申明)：
     let tmp = ···;
     ···
 }  // 块结束
-
 console.log(tmp); // ReferenceError
+```
+
+## 4.3 从字符串拼接，到模板字面量
+
+ES6 中，JavaScript 终于有了字符串插值和多行文本。
+
+### 4.3.1 String 插值
+
+ES5 中你想在字符串中插入一些值，你需要将那些值和字符串片断连接起来：
+
+```ruby
+function printCoord(x, y) {
+    console.log('('+x+', '+y+')');
+}
+```
+
+ES6 中你可以在模板字面量中使用字符串插值：
+
+```ruby
+function printCoord(x, y) {
+    console.log(`(${x}, ${y})`);
+}
+```
+
+### 4.3.2 多行文本
+
+模板文字也有助于表示多行字符串。
+
+例如，在 ES5 中你要这么做：
+
+```ruby
+var HTML5_SKELETON =
+    '<!doctype html>\n' +
+    '<html>\n' +
+    '<head>\n' +
+    '    <meta charset="UTF-8">\n' +
+    '    <title></title>\n' +
+    '</head>\n' +
+    '<body>\n' +
+    '</body>\n' +
+    '</html>\n';
+```
+
+如果你通过反斜杠来转义换行符，看起来会好一些(但是仍然需要显式添加换行符)：
+
+```ruby
+var HTML5_SKELETON = '\
+ <!doctype html>\n\
+ <html>\n\
+ <head>\n\
+ <meta charset="UTF-8">\n\
+ <title></title>\n\
+ </head>\n\
+ <body>\n\
+ </body>\n\
+ </html>';
+```
+
+ES6 的模板字面量允许多行文本：
+
+```ruby
+const HTML5_SKELETON = `
+ <!doctype html>
+ <html>
+ <head>
+ <meta charset="UTF-8">
+ <title></title>
+ </head>
+ <body>
+ </body>
+ </html>`;
 ```
