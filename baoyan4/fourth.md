@@ -65,9 +65,7 @@ func(false); // 3
 其它的使用 let，用于值会被改变的变量。
 避免使用 var。
 
-### 自己加的内容（这不是翻译）
-
-学习分割线开始
+### 学习汾分割线（这不是翻译）
 
 ---
 
@@ -243,3 +241,205 @@ const HTML5_SKELETON = `
  </body>
  </html>`;
 ```
+
+(示例中包含了许多的的空白字符，不过对这个示例没有影响。)
+
+### 4.4 从函数表达式到箭头函数
+
+当前 ES5 代码中，在使用函数表达式的时候，你必须小心 this。在下面的示例中我会在创建一个 _this(A 行) 作为辅助变量，这样在 B 行才可能访问到指向 UiComponent 对象的 this。
+
+```ruby
+function UiComponent() {
+    var _this = this; // (A)
+    var button = document.getElementById('myButton');
+    button.addEventListener('click', function () {
+        console.log('CLICK');
+        _this.handleClick(); // (B)
+    });
+}
+UiComponent.prototype.handleClick = function () {
+    ···
+};
+```
+
+在ES6中，你可以使用箭头函数，不会影响 this （A行）：
+
+```ruby
+function UiComponent() {
+    var button = document.getElementById('myButton');
+    button.addEventListener('click', () => {
+        console.log('CLICK');
+        this.handleClick(); // (A)
+    });
+}
+```
+
+(ES6 中你也可以选择使用 class 代替构建函数，这会在稍后详述。)
+
+对于一些只需要返回某个表达式值的简短的回调，用箭头函数特别方便。
+
+ES5 中这类回调相对繁琐：
+
+```ruby
+var arr = [1, 2, 3];
+var squares = arr.map(function (x) { return x * x });
+```
+
+ES6 中使用箭头函数就简洁得多：
+
+```ruby
+const arr = [1, 2, 3];
+const squares = arr.map(x => x * x);
+```
+
+在定义参数的时候，如果只有一个参数，你可以省略掉括号。像 (x) => x * x 和 x => x * x 都可以。
+
+### 4.5 处理多个返回值
+
+有一些函数或者方法通过数组或对象返回多个值。在 ES5 中，你需要创建一个临时变量来访问那些值。但在 ES6 中你可以使用解构来避免使用临时变量。
+
+#### 4.5.1 通过数组返回多个值
+
+exec() 以伪数组对象的形式返回匹配到的各组。ES5 中需要一个临时变量(下面示例中的matchOjb)，即使你只关心配到的组：
+
+```ruby
+var matchObj =
+    /^(\d\d\d\d)-(\d\d)-(\d\d)$/
+    .exec('2999-12-31');
+var year = matchObj[1];
+var month = matchObj[2];
+var day = matchObj[3];
+```
+
+ES6 的解构让代码变得简单：
+
+```ruby
+const [, year, month, day] =
+    /^(\d\d\d\d)-(\d\d)-(\d\d)$/
+    .exec('2999-12-31');
+```
+
+数组模式开始处的一个空位置，是用来跳过索引0处的数组元素。
+
+##### 学习分割线开始（这不是翻译）
+
+---
+
+* JavaScript exec() 方法： http://www.w3school.com.cn/js/jsref_exec_regexp.asp
+
+* 而且，你可以忽略你不感兴趣的返回值,例如上述例子中忽略的第一个值一样：
+
+    ```ruby
+    function f() {
+      return [1, 2, 3];
+    }
+
+    let [a, , b] = f();
+    console.log(a); // 1
+    console.log(b); // 3
+    ```
+
+* 当解构一个数组时，可以使用剩余模式（拓展语句），将数组剩余部分赋值给一个变量。
+
+    ```ruby
+    let [a, ...b] = [1, 2, 3];
+    console.log(a); // 1
+    console.log(b); // [2, 3]
+    ```
+
+学习分割线结束
+
+---
+
+#### 4.5.2 通过对象返回多个值
+
+Object.getOwnPropertyDescriptor() 方法返回一个属性描述对象，这个对象在它的属性中包含了多个值。
+
+即使你只关心对象的属性，在 ES5 中你也必须使用临时变量(下例中的 propDesc)：
+
+```ruby
+var obj = { foo: 123 };
+
+var propDesc = Object.getOwnPropertyDescriptor(obj, 'foo');
+var writable = propDesc.writable;
+var configurable = propDesc.configurable;
+
+console.log(writable, configurable); // true true
+```
+
+在 ES6 中就可以使用解构
+
+```ruby
+const obj = { foo: 123 };
+
+const {writable, configurable} =
+    Object.getOwnPropertyDescriptor(obj, 'foo');
+
+console.log(writable, configurable); // true true
+```
+
+{writable, configurable} 是一个缩写。完整的是：
+{ writable: writable, configurable: configurable }
+
+### 4.6 从 for 到 forEach() 再到 for-of
+
+在 ES5 之前，你需要遍历数组，如下面这样：
+
+```ruby
+var arr = ['a', 'b', 'c'];
+for (var i=0; i<arr.length; i++) {
+    var elem = arr[i];
+    console.log(elem);
+}
+```
+
+在ES5中你还有一个选择： forEach():
+
+```ruby
+arr.forEach(function (elem) {
+    console.log(elem);
+});
+```
+
+for 循环的优势在于可以中止，forEach() 则更简洁。
+
+ES6 中的 for-of 循环综合了两者的优点：
+
+```ruby
+const arr = ['a', 'b', 'c'];
+for (const elem of arr) {
+    console.log(elem);
+}
+```
+
+如果你既需要元素索引又需要数组元素值，for-of 可以通过一个新的数组方法 entries()，配合使用解构来办到：
+
+```ruby
+for (const [index, elem] of arr.entries()) {
+    console.log(index+'. '+elem);
+}
+```
+
+#### 学习分割线又开始（这不是翻译）
+
+---
+
+* javascript entries() 方法 ：
+
+entries() 方法返回一个 Array Iterator 对象，该对象包含数组中每一个索引的键值对。
+
+* 举个栗子：
+
+  ```ruby
+  var arr = ["a", "b", "c"];
+  var eArr = arr.entries();
+  
+  console.log(eArr.next().value); // [0, "a"]
+  console.log(eArr.next().value); // [1, "b"]
+  console.log(eArr.next().value); // [2, "c"]
+  
+  ```
+
+学习分割线结束
+
+---
