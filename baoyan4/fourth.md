@@ -443,3 +443,76 @@ entries() 方法返回一个 Array Iterator 对象，该对象包含数组中每
 学习分割线结束
 
 ---
+
+### 4.7 默认参数值
+
+在ES5中指定一个参数的默认值要这样：
+
+```ruby
+function foo(x, y) {
+    x = x || 0;
+    y = y || 0;
+    ···
+}
+```
+
+ES6有更好的语法：
+
+```ruby
+function foo(x=0, y=0) {
+    ···
+}
+```
+
+ ES6的另一个人好处是，一个参数的默认值只有在undefined的情况下会触发，而在ES5中所有判断是false的值都会被替换成默认值。
+
+### 4.8 命名参数
+
+ 在javaScript中命名参数常用的方法是对象字像字面量（也叫选择对象模式）
+
+```ruby
+selectEntries({ start: 0, end: -1 });
+```
+
+这种方法带来了两个好处：代码可以自解释，而且很轻易的可以忽略某些参数
+
+在ES5中，您可以实现selectEntries()如下:
+
+```ruby
+function selectEntries(options) {
+    var start = options.start || 0;
+    var end = options.end || -1;
+    var step = options.step || 1;
+    ···
+}
+```
+
+在ES6中，你可以在参数定义中使用解构，看起来代码简洁了很多：
+
+```ruby
+function selectEntries({ start=0, end=-1, step=1 }) {
+    ···
+}
+```
+
+#### 4.8.1 使参数可选
+
+在ES5中你要想实现参数可选，你需要在代码里加上A行：
+
+```ruby
+function selectEntries(options) {
+    options = options || {}; // (A)
+    var start = options.start || 0;
+    var end = options.end || -1;
+    var step = options.step || 1;
+    ···
+}
+```
+
+ES6中可以指定{}作为参数的默认值
+
+```ruby
+function selectEntries({ start=0, end=-1, step=1 } = {}) {
+    ···
+}
+```
