@@ -516,3 +516,70 @@ function selectEntries({ start=0, end=-1, step=1 } = {}) {
     ···
 }
 ```
+
+### 4.9 从argument 到rest 参数
+
+在ES5中如果你想让一个函数（或方法）接受任意数量的参数，你必须要使用这个特殊变量:arguements:
+
+```ruby
+function logAllArguments() {
+    for (var i=0; i < arguments.length; i++) {
+        console.log(arguments[i]);
+    }
+}
+```
+
+在ES6中，你可以通过...运算符定义一个剩余变量（例如下面栗子中的args）：
+
+```ruby
+function logAllArguments(...args) {
+    for (const arg of args) {
+        console.log(arg);
+    }
+}
+```
+
+如果您只对尾部参数感兴趣，Rest参数甚至更好:
+
+```ruby
+function format(pattern, ...args) {
+    ···
+}
+```
+
+用ES5处理同样的事情就有点复杂了：
+
+```ruby
+function format(pattern) {
+    var args = [].slice.call(arguments, 1);
+    ···
+}
+```
+
+剩余参数让代码变得简单易读：你只要通过看参数定义就能知道它有可变数量的参数。
+
+### 4.10 从apply扩展到运算符（...）
+
+在ES6中通过apply来把数组作为参数使用，ES6通过扩展运算符来解决这个问题：
+
+### 4.10.1 Math.max()
+
+Math.max() 返回参数中最大的数。它接受数量不定的参数，但不接受数组。
+
+ES5 -apply()
+
+```ruby
+> Math.max.apply(Math, [-1, 5, 11, 3])
+11
+```
+
+ES6扩扩展运算符：
+
+```ruby
+const arr1 = ['a', 'b'];
+const arr2 = ['c', 'd'];
+
+arr1.push(...arr2);
+    // arr1 is now ['a', 'b', 'c', 'd']
+
+```
