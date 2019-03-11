@@ -562,7 +562,7 @@ function format(pattern) {
 
 在ES6中通过apply来把数组作为参数使用，ES6通过扩展运算符来解决这个问题：
 
-### 4.10.1 Math.max()
+#### 4.10.1 Math.max()
 
 Math.max() 返回参数中最大的数。它接受数量不定的参数，但不接受数组。
 
@@ -584,7 +584,7 @@ arr1.push(...arr2);
 
 ```
 
-### 4.10.2 Array.prototype.push()
+#### 4.10.2 Array.prototype.push()
 
 ES5 – apply()：
 
