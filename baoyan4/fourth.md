@@ -583,3 +583,144 @@ arr1.push(...arr2);
     // arr1 is now ['a', 'b', 'c', 'd']
 
 ```
+
+### 4.10.2 Array.prototype.push()
+
+ES5 – apply()：
+
+```runby
+var arr1 = ['a', 'b'];
+var arr2 = ['c', 'd'];
+
+arr1.push.apply(arr1, arr2);
+    // arr1 is now ['a', 'b', 'c', 'd']
+```
+
+ES6 – 扩展运算符：
+
+```ruby
+const arr1 = ['a', 'b'];
+const arr2 = ['c', 'd'];
+
+arr1.push(...arr2);
+    // arr1 is now ['a', 'b', 'c', 'd']
+```
+
+### 4.11 从 concat() 到扩展运算符 (...)
+
+扩展运算符也能(并非解构)将其内容转换为数组元素。也就是说，它可以代替数组方法 concat()。
+
+ES5 – concat()：
+
+```ruby
+var arr1 = ['a', 'b'];
+var arr2 = ['c'];
+var arr3 = ['d', 'e'];
+
+console.log(arr1.concat(arr2, arr3));
+    // [ 'a', 'b', 'c', 'd', 'e' ]
+```
+
+ES6 – 扩展运算符：
+
+```ruby
+const arr1 = ['a', 'b'];
+const arr2 = ['c'];
+const arr3 = ['d', 'e'];
+
+console.log([...arr1, ...arr2, ...arr3]);
+    // [ 'a', 'b', 'c', 'd', 'e' ]
+```
+
+### 4.12 从对象字符量的函数表达式到方法定义
+
+JavaScript 的方法是值为函数的属性。
+
+ES5 对象字面量中，添加方法和添加其它属性一样，其属性值是函数表达式。
+
+```ruby
+var obj = {
+    foo: function () {
+        ···
+    },
+    bar: function () {
+        this.foo();
+    }, // trailing comma is legal in ES5
+}
+```
+
+ES6 引入了 方法定义，专门用于添加方法的语法：
+
+```ruby
+const obj = {
+    foo() {
+        ···
+    },
+    bar() {
+        this.foo();
+    },
+}
+```
+
+### 4.13 从构造器到类
+
+ES6 引入的类语法比原来的构建函数更为方便。
+
+#### 4.13.1 基类
+
+ES5中直接实现一个构造函数：
+
+```ruby
+function Person(name) {
+    this.name = name;
+}
+Person.prototype.describe = function () {
+    return 'Person called '+this.name;
+};
+```
+
+es6的类语法提供了比构造函数稍微方便一点的语法：
+
+```ruby
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    describe() {
+        return 'Person called '+this.name;
+    }
+}
+```
+
+注意简化的方法定义语法——不再考虑function关键字。也请注意类的各个部分之间没有逗号。
+
+#### 4.13.2 派生类
+
+ES5中织实现子类是件麻烦的事情，尤其是使用父类的构造函数和父类属性的时候，下面使用经典方法创建person的子类构造函数 Employee：
+
+```ruby
+function Employee(name, title) {
+    Person.call(this, name); // super(name)
+    this.title = title;
+}
+Employee.prototype = Object.create(Person.prototype);
+Employee.prototype.constructor = Employee;
+Employee.prototype.describe = function () {
+    return Person.prototype.describe.call(this) // super.describe()
+           + ' (' + this.title + ')';
+};
+```
+
+ES6 内置支持子类，只需要使用 extends 子句：
+
+```ruby
+class Employee extends Person {
+    constructor(name, title) {
+        super(name);
+        this.title = title;
+    }
+    describe() {
+        return super.describe() + ' (' + this.title + ')';
+    }
+}
+```
