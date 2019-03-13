@@ -696,7 +696,7 @@ class Person {
 
 #### 4.13.2 派生类
 
-ES5中织实现子类是件麻烦的事情，尤其是使用父类的构造函数和父类属性的时候，下面使用经典方法创建person的子类构造函数 Employee：
+ES5中实现子类是件麻烦的事情，尤其是使用父类的构造函数和父类属性的时候，下面使用经典方法创建person的子类构造函数 Employee：
 
 ```ruby
 function Employee(name, title) {
@@ -723,4 +723,107 @@ class Employee extends Person {
         return super.describe() + ' (' + this.title + ')';
     }
 }
+```
+
+### 4.14 从自定义错误构造函数到 Error 的子类
+
+ES5 不能实现内置异常构造器 Error 的子类。下面的代码展示了如果让 MyError 实现一些重要的功能，比如栈跟踪：
+
+```ruby
+function MyError() {
+    // Use Error as a function
+    var superInstance = Error.apply(null, arguments);
+    copyOwnPropertiesFrom(this, superInstance);
+}
+MyError.prototype = Object.create(Error.prototype);
+MyError.prototype.constructor = MyError;
+
+function copyOwnPropertiesFrom(target, source) {
+    Object.getOwnPropertyNames(source)
+    .forEach(function(propKey) {
+        var desc = Object.getOwnPropertyDescriptor(source, propKey);
+        Object.defineProperty(target, propKey, desc);
+    });
+    return target;
+};
+```
+
+ES6 中所有内置构造器都可以被继承，下面的代码展示了在 ES5 只能模拟的东西：
+
+```ruby
+class MyError extends Error {
+}
+```
+
+### 4.15 从对象到 Map
+
+使用语言构造对象作为从字符串到任意值的映射(一种数据结构)，一直是javaScript中的一个临时方案。最安全的方法是创建一个原型是null的对象。然后你还得确保永远不会有一个键是："proto",因为那个属性名称在很多 JavaScript 引擎中有着特殊的意义。
+
+下面的 ES5 代码含有函数 countWords，它把名为 dict 的对象作为映射表：
+
+```ruby
+var dict = Object.create(null);
+function countWords(word) {
+    var escapedWord = escapeKey(word);
+    if (escapedWord in dict) {
+        dict[escapedWord]++;
+    } else {
+        dict[escapedWord] = 1;
+    }
+}
+function escapeKey(key) {
+    if (key.indexOf('__proto__') === 0) {
+        return key+'%';
+    } else {
+        return key;
+    }
+}
+```
+
+ES6 提供了内置数据结构 Map，使它的时候不需要对键进行转义。不过它有一个缺点是不太方便使用自增运算。
+
+```ruby
+const map = new Map();
+function countWords(word) {
+    const count = map.get(word) || 0;
+    map.set(word, count + 1);
+}
+```
+
+Map 带来的另一个好处是你可以使用任意类型的值，而不一定是字符串值，来作为键。
+
+### 4.16 新的字符串方法
+
+ECMAScript 6 标准库为字符串提供了一些新的方法。
+
+从indexOf 到 startsWith:
+
+```ruby
+if (str.indexOf('x') === 0) {} // ES5
+if (str.startsWith('x')) {} // ES6
+```
+
+从indexOf 到 endsWith:
+
+```ruby
+function endsWith(str, suffix) { // ES5
+  var index = str.indexOf(suffix);
+  return index >= 0
+    && index === str.length-suffix.length;
+}
+str.endsWith(suffix); // ES6
+```
+
+从indexOf 到 includes:
+
+```ruby
+if (str.indexOf('x') >= 0) {} // ES5
+if (str.includes('x')) {} // ES6
+```
+
+从join 到 repeat (ES5 中重复字符串的方法更需要技巧)：
+
+```ruby
+new Array(3+1).join('#') // ES5
+'#'.repeat(3) // ES6
 ```
